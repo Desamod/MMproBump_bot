@@ -173,8 +173,10 @@ class Tapper:
 
             tasks = response_json
             for task in tasks:
-                if task['status'] == 'possible' and (
-                        task['type'] == "twitter" or "Twitter" in task['name']):  # only twitter tasks
+                if (task['status'] == 'possible' and
+                        ((task['type'] == "twitter" or "Twitter" in task['name'])
+                         or (task['type'] == "youtube" or "YouTube" in task['name']))):     # only twitter & youtube tasks
+
                     random_hash = generate_time_hash()
                     json_data = {
                         'id': task['id'],
