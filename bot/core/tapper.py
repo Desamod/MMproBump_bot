@@ -182,6 +182,7 @@ class Tapper:
                         'id': task['id'],
                         'hash': random_hash
                     }
+                    logger.info(f"{self.session_name} | Processing task: <y>{task['id']}</y>")
                     complete_resp = await http_client.post('https://api.mmbump.pro/v1/task-list/complete',
                                                            json=json_data)
                     complete_resp.raise_for_status()
