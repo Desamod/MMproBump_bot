@@ -173,7 +173,7 @@ class Tapper:
 
             tasks = response_json
             for task in tasks:
-                if (task['status'] == 'possible' and
+                if (task['status'] == 'possible' and task['is_active'] == 1 and
                         ((task['type'] == "twitter" or "Twitter" in task['name'])
                          or (task['type'] == "youtube" or "YouTube" in task['name']))):     # only twitter & youtube tasks
 
