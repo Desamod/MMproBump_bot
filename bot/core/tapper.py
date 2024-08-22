@@ -263,15 +263,20 @@ class Tapper:
             response = await http_client.post('https://api.mmbump.pro/v1/farming/finish',
                                               json=json_data)
             response.raise_for_status()
-            response_json = await response.json()
+            if response.content_length is None:
+                logger.success(
+                    f"{self.session_name} | Finished farming")
+                return True
 
-            new_balance = response_json['balance']
-            session_json = response_json['session']
-            added_amount = session_json['amount']
-            taps = session_json['taps']
-            logger.success(
-                f"{self.session_name} | Finished farming | Got <light-yellow>{added_amount + taps}</light-yellow> "
-                f"points | New balance: <e>{new_balance}</e>")
+            else:
+                response_json = await response.json()
+                new_balance = response_json['balance']
+                session_json = response_json['session']
+                added_amount = session_json['amount']
+                taps = session_json['taps']
+                logger.success(
+                    f"{self.session_name} | Finished farming | Got <light-yellow>{added_amount + taps}</light-yellow> "
+                    f"points | New balance: <e>{new_balance}</e>")
             return True
 
         except Exception as error:
@@ -297,10 +302,12 @@ class Tapper:
                 await self.moon_claim(http_client=http_client, retry=retry)
             else:
                 response.raise_for_status()
-                response_json = await response.json()
-
-                new_balance = response_json['balance']
-                logger.success(f"{self.session_name} | Moon bonus claimed | Balance: <e>{new_balance}</e>")
+                if response.content_length is None:
+                    logger.success(f"{self.session_name} | Moon bonus claimed")
+                else:
+                    response_json = await response.json()
+                    new_balance = response_json['balance']
+                    logger.success(f"{self.session_name} | Moon bonus claimed | Balance: <e>{new_balance}</e>")
 
         except Exception as error:
             logger.error(f"{self.session_name} | Unknown error when Moon Claiming: {error}")
