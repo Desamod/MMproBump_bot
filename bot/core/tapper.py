@@ -199,7 +199,8 @@ class Tapper:
 
     async def claim_daily(self, http_client: aiohttp.ClientSession):
         try:
-            response = await http_client.post('https://api.mmbump.pro/v1/grant-day/claim')
+            response = await http_client.post('https://api.mmbump.pro/v1/grant-day/claim',
+                                              json={'hash': generate_time_hash()})
             response.raise_for_status()
             response_json = await response.json()
 
@@ -265,7 +266,7 @@ class Tapper:
             response.raise_for_status()
             if response.content_length is None:
                 logger.success(
-                    f"{self.session_name} | Finished farming")
+                    f"{self.session_name} | Finished farming | Added taps: <light-yellow>{taps}</light-yellow>")
                 return True
 
             else:
